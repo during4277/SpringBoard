@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- member_mapper.xml : 회원관련 쿼리문 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+1.parameterType에 1개의 Type만 올 수 있다.
+2.parameterType에 bean인 경우 #{필드명}
+3.parameterType에 Map<ket,value>타입인 경우 #{key}로 쓴다.
+4.resultType도 1개만 올 수 있는데 selectList인 경우 List로 반환한다. 
+-->
+<mapper namespace="member">
+	<insert id="memberInsert" parameterType="member">
+		INSERT INTO m VALUES(#{m_id},#{m_pw},#{m_name},#{m_birth},#{m_addr},#{m_phone},default)
+	</insert>
+	<!--  -->
+	<select id="getLoginResult" parameterType="member" resultType="Integer">
+		SELECT COUNT(*) FROM m WHERE m_id=#{m_id} AND m_pw=#{m_pw}
+	</select>
+	<select id="getMemberInfo" parameterType="String" resultType="member">
+		SELECT * FROM minfo WHERE m_id=#{m_id}<!-- select한 결과를 resultType의 빈에 저장한다 -->
+	</select>
+	<select id="getSecurityPw" parameterType="String" resultType="String">
+		SELECT m_pw FROM minfo WHERE m_id=#{m_id}	
+	</select>
+	<select id="hashMapTest" parameterType="HashMap" resultType="Integer">
+		SELECT COUNT(*) FROM m WHERE m_id=#{id} AND m_pw=#{pw}
+	</select>
+</mapper>

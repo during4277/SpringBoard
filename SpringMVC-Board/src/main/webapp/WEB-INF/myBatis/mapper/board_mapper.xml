@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- board_mapper.xml : 게시판관련 쿼리문 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+	<!--빈 필드명과 컬럼명이 다르거나 타입이 호환안될 때 -->
+	<resultMap type="board" id="board3">
+		<result property="bnum" column="B_NUM" />
+		<result property="btilte" column="B_TITLE" />
+		<result property="bcontents" column="B_CONTENTS" jdbcType="NCLOB" 
+			javaType="String" />
+		<result property="bid" column="M_ID" />
+	</resultMap>
+	<insert id="fileInsert" parameterType="Map">
+		INSERT INTO bf VALUES(#{bnum}, boardfile_seq.nextval, #{oriFileName}, #{sysFileName})
+	</insert>
+	<!-- <select id="getBoardList" resultMap="board3">
+		SELECT b_num, b_title, b_contents, b_id FROM board
+	</select>  -->
+	<select id="getBoardMaxNum" resultType="Integer">
+		SELECT MAX(bnum) FROM blist_1
+	</select>
+	<insert id="boardInsert" parameterType="board">
+		INSERT INTO b VALUES(board_seq.nextval, #{btitle}, #{bcontents}, #{bid}, default, default)
+	</insert>
+	<select id="getBoardList" parameterType="Integer" resultType="Board">
+		<!-- SELECT bnum, btitle, bid, bdate, bview FROM( SELECT ceil(rownum/10) 
+			AS page, bnum, btitle, bid, bdate, bview FROM( SELECT bnum, btitle, bid, 
+			bdate, bview FROM blist_1 ORDER BY bnum ) ) WHERE page = #{pageNum} -->
+    	<![CDATA[
+    	SELECT * FROM blist_1 WHERE rnum>=#{pageNum}*10-9 AND rnum<=#{pageNum}*10
+    	]]>
+	</select>
+	<select id="getBoardCount" resultType="Integer">
+		SELECT COUNT(*) FROM
+		blist_1
+	</select>
+	<select id="getContents" parameterType="Integer" resultType="Board">
+		SELECT * FROM blist_1 WHERE bnum=#{bnum}
+	</select>
+	<select id="getReplyList" parameterType="Integer" resultType="Reply">
+		SELECT * FROM rlist WHERE r_bnum=#{bnum}
+	</select>
+
+	<select id="getReplyMaxNum" resultType="Integer">
+		SELECT MAX(R_NUM) FROM
+		rlist
+	</select>
+	<insert id="replyInsert" parameterType="reply">
+		INSERT INTO r
+		VALUES(#{r_num}, #{r_bnum}, #{r_contents}, #{r_id}, DEFAULT)
+	</insert>
+	<select id="getReplyCount" resultType="Integer">
+		SELECT COUNT(*) FROM rlist
+	</select>
+	<delete id="replyDelete" parameterType="Integer">
+		DELETE FROM r WHERE
+		R_BNUM = #{bnum}
+	</delete>
+	<delete id="articleDelete" parameterType="Integer">
+		DELETE FROM b WHERE
+		B_NUM = #{bnum}
+	</delete>
+</mapper>

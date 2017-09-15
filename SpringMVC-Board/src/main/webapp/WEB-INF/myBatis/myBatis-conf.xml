@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyBatis 공통적인 환경 설정 -->
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false"/>
+		<setting name="useGeneratedKeys" value="true"/>
+		<!-- <setting name="lazyLoadingEnabled" value="true"/> -->
+		<setting name="defaultExecutorType" value="REUSE"/>
+		<!-- <setting name="defaultStatementTimeout" value="3000"/> -->
+	</settings>
+	<typeAliases>
+		<!-- alias가 안먹히면 mybatis에 있는 명령어 때문에 안먹는 경우이다-->
+		<typeAlias alias="member" type="com.board.cha.bean.Member"/>
+		<typeAlias alias="board" type="com.board.cha.bean.Board"/>
+		<typeAlias alias="reply" type="com.board.cha.bean.Reply"/>
+		<typeAlias alias="boardfile" type="com.board.cha.bean.BoardFile"/>
+	</typeAliases>
+</configuration>
